@@ -1,5 +1,7 @@
 # AWS Zero Trust lab
 
+[![Terraform](https://github.com/CloudVeteran/AWS-Zero-Trust-Terraform/actions/workflows/terraform.yml/badge.svg?branch=main)](https://github.com/CloudVeteran/AWS-Zero-Trust-Terraform/actions/workflows/terraform.yml)
+
 Terraform for a small AWS lab: a VPC with three private subnets, an AWS Verified Access instance with a Jamf device trust provider, a Network Firewall, a GuardDuty detector, and Security Hub CSPM subscribed to NIST SP 800-53 Rev. 5.
 
 Portfolio project by Marlon Garcia, AWS Certified Solutions Architect and CompTIA Security+.
