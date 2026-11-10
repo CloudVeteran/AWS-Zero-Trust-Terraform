@@ -1,4 +1,4 @@
-# AWS Zero Trust lab
+# Zero Trust Cloud Architecture on AWS (Terraform)
 
 [![Terraform](https://github.com/CloudVeteran/AWS-Zero-Trust-Terraform/actions/workflows/terraform.yml/badge.svg?branch=main)](https://github.com/CloudVeteran/AWS-Zero-Trust-Terraform/actions/workflows/terraform.yml)
 
