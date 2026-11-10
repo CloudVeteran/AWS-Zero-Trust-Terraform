@@ -32,11 +32,11 @@ resource "aws_verifiedaccess_trust_provider" "device" {
 }
 
 resource "aws_verifiedaccess_instance_trust_provider_attachment" "main" {
-  verifiedaccess_instance_id     = aws_verifiedaccess_instance.main.id
+  verifiedaccess_instance_id       = aws_verifiedaccess_instance.main.id
   verifiedaccess_trust_provider_id = aws_verifiedaccess_trust_provider.device.id
 }
 
-# Network Firewall (simplified)
+# Endpoint in the first private subnet. The policy attaches no rule groups.
 resource "aws_networkfirewall_firewall" "main" {
   name                = "${var.project_name}-firewall"
   firewall_policy_arn = aws_networkfirewall_firewall_policy.main.arn

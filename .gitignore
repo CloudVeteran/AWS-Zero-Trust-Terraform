@@ -1,0 +1,33 @@
+# Terraform local working directory
+.terraform/
+
+# State files may contain resource IDs and other sensitive data
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Variable files often hold account-specific values
+*.tfvars
+*.tfvars.json
+!terraform.tfvars.example
+
+# Local override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Saved plans
+*.tfplan
+tfplan
+
+# CLI config
+.terraformrc
+terraform.rc
+
+.DS_Store
+Thumbs.db
