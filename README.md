@@ -6,6 +6,10 @@ Terraform for a small AWS lab: a VPC with three private subnets, an AWS Verified
 
 Portfolio project by Marlon Garcia, AWS Certified Solutions Architect and CompTIA Security+.
 
+![One AWS account in a single Region: a private VPC 10.0.0.0/16 with three private subnets, a Network Firewall endpoint in the first subnet that has no rules and no traffic routed to it, a Verified Access instance attached only to a Jamf device trust provider, and GuardDuty sending findings to Security Hub for NIST SP 800-53 Rev. 5.](docs/architecture.png)
+
+*How to read this: the gray box is one AWS account, the green box is a private network with no internet gateway, the firewall sits in subnet 1 and does not inspect traffic, the Jamf check is not connected to an app, and GuardDuty sends findings to Security Hub.*
+
 ## Status and scope
 
 This is a lab and portfolio project, not a production architecture. It is not an authority to operate, a FedRAMP package, or a complete Zero Trust design. The control table lists NIST SP 800-53 Rev. 5 controls these resources can support. A row in that table is not a control implementation statement, and it is not evidence that the control is satisfied.
@@ -29,32 +33,43 @@ Copy `terraform.tfvars.example` to `terraform.tfvars` to override the Region, pr
 GuardDuty and Security Hub are account-and-Region services. The VPC resources are in `modules/zero-trust`. When both services are enabled in the same account and Region, GuardDuty sends its findings to Security Hub on its own. There is no `aws_securityhub_product_subscription` in this repo.
 
 ```mermaid
-flowchart TD
-    subgraph Account["AWS account, one Region"]
+flowchart TB
+    subgraph Account["One AWS account, one Region"]
         direction TB
 
-        subgraph Monitoring["Account-level monitoring"]
+        subgraph Monitoring["Watches the account"]
             direction LR
-            GuardDuty["Amazon GuardDuty<br/>detector"]
-            SecurityHub["Security Hub CSPM<br/>NIST SP 800-53 Rev. 5"]
+            GuardDuty["Threat detection<br/>(GuardDuty)"]
+            SecurityHub["Compliance checks:<br/>NIST 800-53 Rev. 5<br/>(Security Hub)"]
         end
 
-        GuardDuty -->|Findings sent by GuardDuty| SecurityHub
+        GuardDuty -->|sends findings| SecurityHub
 
-        subgraph VPC["VPC 10.0.0.0/16"]
+        subgraph VPC["Private network 10.0.0.0/16<br/>No internet gateway"]
             direction TB
-            Subnet1["Private subnet 1"]
-            Subnet2["Private subnet 2"]
-            Subnet3["Private subnet 3"]
-            Firewall["Network Firewall<br/>endpoint in subnet 1"]
-            VerifiedAccess["Verified Access instance"]
-            TrustProvider["Jamf device trust provider"]
-        end
-    end
+            Subnet1["Private subnet 1<br/>10.0.16.0/20, zone 1"]
+            Subnet2["Private subnet 2<br/>10.0.32.0/20, zone 2"]
+            Subnet3["Private subnet 3<br/>10.0.48.0/20, zone 3"]
+            Firewall["Network Firewall<br/>(no rules yet)"]
 
-    Firewall --- Subnet1
-    VerifiedAccess --- TrustProvider
+            Subnet1 --- Subnet2
+            Subnet2 --- Subnet3
+            Firewall ---|placed in subnet 1, no traffic routed| Subnet1
+        end
+
+        subgraph DeviceTrust["Device check only. No app behind it"]
+            direction LR
+            VerifiedAccess["Verified Access<br/>(no app endpoint)"]
+            TrustProvider["Device trust check<br/>(Jamf)"]
+        end
+
+        VerifiedAccess ---|attached| TrustProvider
+    end
 ```
+
+The three subnets share one private network. The firewall endpoint is only in subnet 1, and nothing routes traffic to it. Verified Access is attached to the Jamf device check and has no app endpoint.
+
+Redraw the picture at the top with Graphviz installed: `pip install diagrams`, then `python docs/diagram.py`.
 
 ## What the code creates
 
@@ -99,6 +114,10 @@ Support means the resource is a relevant piece of the control. It does not mean 
 ├── backend.tf                   # S3 state; replace the bucket before a real init
 ├── terraform.tfvars.example
 ├── modules/zero-trust/          # VPC, subnets, Verified Access, Network Firewall
+├── docs/
+│   ├── architecture.png         # picture at the top of this file
+│   ├── diagram.py               # redraws that picture
+│   └── icons/                   # Verified Access icon used by diagram.py
 ├── LICENSE                      # MIT, Copyright (c) 2026 Marlon Garcia
 └── README.md
 ```
