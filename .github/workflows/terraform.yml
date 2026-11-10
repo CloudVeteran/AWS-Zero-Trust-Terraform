@@ -32,3 +32,11 @@ jobs:
 
       - name: Terraform validate
         run: terraform validate
+
+      - name: Bootstrap init
+        working-directory: bootstrap
+        run: terraform init -backend=false
+
+      - name: Bootstrap validate
+        working-directory: bootstrap
+        run: terraform validate

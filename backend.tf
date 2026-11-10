@@ -1,10 +1,10 @@
 terraform {
   backend "s3" {
-    # Replace this with an S3 bucket you own before a real init.
-    bucket       = "terraform-state-bucket-mag0508"
+    # bucket, region, and kms_key_id are account-specific.
+    # Copy backend.hcl.example to backend.hcl and pass it at init:
+    #   terraform init -backend-config=backend.hcl
     key          = "zero-trust/terraform.tfstate"
-    region       = "us-east-1"
-    use_lockfile = true
     encrypt      = true
+    use_lockfile = true
   }
 }
