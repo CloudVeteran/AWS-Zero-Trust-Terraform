@@ -17,13 +17,13 @@ variable "vpc_cidr" {
 }
 
 variable "tags" {
-  description = "Default tags for all resources"
+  description = "Tags applied to resources that accept tags"
   type        = map(string)
   default = {
     Project     = "Zero-Trust"
-    Environment = "Production"
-    Owner       = "Marlon"
-    Compliance  = "CISA-Zero-Trust"
+    Environment = "Lab"
+    Owner       = "Marlon Garcia"
+    Compliance  = "portfolio-lab"
     ManagedBy   = "Terraform"
   }
 }
