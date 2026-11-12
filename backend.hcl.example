@@ -1,0 +1,13 @@
+# Copy to backend.hcl and replace the three values with bootstrap outputs.
+# backend.hcl is gitignored.
+#
+#   bucket     <- bucket_name
+#   region     <- bucket_region
+#   kms_key_id <- kms_key_arn
+#
+# kms_key_id must be the key ARN. encrypt and use_lockfile are set in backend.tf.
+# The state object key is zero-trust/terraform.tfstate.
+
+bucket     = "replace-me-terraform-state"
+region     = "us-east-1"
+kms_key_id = "arn:aws:kms:us-east-1:000000000000:key/00000000-0000-0000-0000-000000000000"
